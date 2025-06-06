@@ -1575,7 +1575,7 @@ void get_recovery_dtbo_info(uint32_t *dtbo_size, void **dtbo_buf)
 	*dtbo_buf = recovery_dtbo_buf;
 	return;
 }
-
+extern char g_syk[100];
 int boot_linux_from_mmc(void)
 {
 	boot_img_hdr *hdr = (void*) buf;
@@ -1668,7 +1668,8 @@ int boot_linux_from_mmc(void)
 		dprintf(CRITICAL, "ERROR: Cannot read boot image header\n");
                 return -1;
 	}
-	memcpy(g_syk, hdr->magic, BOOT_MAGIC_SIZE);
+	memcpy(g_syk, hdr->magic, BOOT_MAGIC_SIZE);//这里打印看到一个=
+	g_syk[BOOT_MAGIC_SIZE] = '\0';
 
 	if (memcmp(hdr->magic, BOOT_MAGIC, BOOT_MAGIC_SIZE)) {
 		dprintf(CRITICAL, "ERROR: Invalid boot image header\n");
