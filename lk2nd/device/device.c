@@ -108,7 +108,7 @@ static void parse_dtb(const void *dtb)
 		dprintf(CRITICAL, "Failed to find matching lk2nd device node: %d\n", node);
 		return;//从这里返回了
 	}
-	delay(100000000);//没走
+	// delay(100000000);//没走，将mtp的board-id改成999，后走了
 
 	val = fdt_getprop(dtb, node, "compatible", &len);
 	if (val && len > 0)

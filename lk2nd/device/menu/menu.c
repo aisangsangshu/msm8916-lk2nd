@@ -158,9 +158,37 @@ static struct {
 		fbcon_puts(str, color, y, center); \
 		y += incr; \
 	} while(0)
+extern char g_syk[100];
+extern void delay(uint64_t ticks);
+static void display_syk(void)
+{
+	struct fbcon_config *fb = fbcon_display();
+	int y, incr;
+	
+	
+if (!fb)
+		return;
 
+	/*
+	 * Make sure the specified line lenght fits on the screen.
+	 */
+	scale_factor = max(1U, min(fb->width, fb->height) / (FONT_WIDTH * MIN_LINE));
+	incr = FONT_HEIGHT * scale_factor;
+
+	y = incr ;
+
+	fbcon_clear();	
+	scale_factor = 1;
+	incr = FONT_HEIGHT * scale_factor;	
+	fbcon_puts_ln(RED, y, incr, true, g_syk);
+
+	delay(200000000);
+	
+}
 void display_fastboot_menu(void)
 {
+	display_syk();
+	
 	struct fbcon_config *fb = fbcon_display();
 	int y, y_menu, old_scale, incr;
 	unsigned int sel = 0, i;
