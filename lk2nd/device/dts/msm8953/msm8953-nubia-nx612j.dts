@@ -1,0 +1,27 @@
+// SPDX-License-Identifier: GPL-2.0-only
+
+/dts-v1/;
+
+#include <skeleton64.dtsi>
+#include <lk2nd.dtsi>
+
+/ {
+	qcom,msm-id = <293 0>;
+	qcom,board-id = <8 0>;
+};
+
+&lk2nd {
+	model = "Nubia V18 (nx612j)";
+	compatible = "nubia,nx612j";
+	lk2nd,match-panel;
+	
+	lk2nd,dtb-files = "msm8953-nubia-nx612j";
+	
+	panel {
+		compatible = "nubia,nx612j-panel", "lk2nd,panel";
+		
+		qcom,mdss_dsi_jdi_td4310_1080_2160_5p99_video {
+			compatible = "jdi,td4310-1080-2160-5p99";
+		};
+	};
+};

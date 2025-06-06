@@ -35,12 +35,13 @@ static bool match_string(const char *s, const char *match, int len)
 	}
 	return strncmp(s, match, len + 1) == 0;
 }
-
+extern void delay(uint64_t ticks);
 static bool match_panel(const void *dtb, int node, const char *panel_name)
 {
+	//  delay(100000000);//走
 	if (!panel_name)
 		return false;
-
+	// delay(100000000);//走
 	node = fdt_subnode_offset(dtb, node, "panel");
 	if (node < 0) {
 		dprintf(CRITICAL, "No panels defined, cannot match\n");
@@ -94,13 +95,14 @@ static bool match_device_node(const void *dtb, int node)
 
 	return matched;
 }
-
+extern void delay(uint64_t ticks);
 int lk2nd_device2nd_match_device_node(const void *dtb, int lk2nd_node)
 {
-	int node;
-
-	fdt_for_each_subnode(node, dtb, lk2nd_node)
+	int node ;
+//走
+	fdt_for_each_subnode(node, dtb, lk2nd_node)//宏修改了node
 		if (match_device_node(dtb, node))
 			return node;
+	// delay(100000000);//走
 	return node;
 }

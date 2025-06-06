@@ -12,7 +12,7 @@
 #include <lk2nd/util/lkfdt.h>
 
 #include "device.h"
-
+extern void delay(uint64_t ticks);
 struct lk2nd_device lk2nd_dev;
 
 /**
@@ -27,10 +27,10 @@ static int find_device_node(const void *dtb)
 {
 	int lk2nd_node, node, ret;
 
-	lk2nd_node = fdt_path_offset(dtb, "/lk2nd");
+	lk2nd_node = fdt_path_offset(dtb, "/lk2nd");//照这个节点
 	if (lk2nd_node < 0)
 		return lk2nd_node;
-
+// delay(100000000);//走
 	if (lk2nd_dev.compatible) {
 		/* Check if root node is already compatible */
 		ret = fdt_node_check_compatible(dtb, lk2nd_node, lk2nd_dev.compatible);
@@ -45,10 +45,12 @@ static int find_device_node(const void *dtb)
 				return node;
 		return node;
 	}
+	// delay(100000000);//走
 
 	/* If root node already has a "compatible" it always matches */
 	if (fdt_getprop(dtb, lk2nd_node, "compatible", NULL))
 		return lk2nd_node;
+	// delay(100000000);//走
 
 	/* Fallback to dynamic matching */
 	return lk2nd_device2nd_match_device_node(dtb, lk2nd_node);
@@ -98,18 +100,23 @@ static void parse_dtb(const void *dtb)
 {
 	int node, len;
 	const char *val;
+	 //delay(100000000);//100+6大概10s
+	//while(1);//走了
 
 	node = find_device_node(dtb);
 	if (node < 0) {
 		dprintf(CRITICAL, "Failed to find matching lk2nd device node: %d\n", node);
-		return;
+		return;//从这里返回了
 	}
+	delay(100000000);//没走
 
 	val = fdt_getprop(dtb, node, "compatible", &len);
 	if (val && len > 0)
 		lk2nd_dev.compatible = strndup(val, len);
 	else
 		dprintf(CRITICAL, "Failed to read 'compatible': %d\n", len);
+
+		//while(1);//没走到这里
 
 	val = fdt_getprop(dtb, node, "model", &len);
 	if (val && len > 0)

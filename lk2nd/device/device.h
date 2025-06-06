@@ -50,6 +50,7 @@ extern struct lk2nd_device lk2nd_dev;
 const void *lk2nd_device2nd_init(void);
 int lk2nd_device2nd_match_device_node(const void *dtb, int lk2nd_node);
 #else
+1
 static inline const void *lk2nd_device2nd_init(void) { return NULL; }
 static inline int lk2nd_device2nd_match_device_node(const void *dtb, int lk2nd_node) { return -1; }
 #endif

@@ -157,7 +157,7 @@ const void *lk2nd_device2nd_parse_tags(void)
 	extern uintptr_t lk_boot_args[3];
 	extern uintptr_t lk_boot_addr;
 
-	uintptr_t addr = lk_boot_args[2];
+	uintptr_t addr = lk_boot_args[2];//获取地址
 	const void *tags = (const void*)addr;
 
 	dprintf(INFO, "Booted @ %p, r0=%#lx, r1=%#lx, r2=%#lx\n",

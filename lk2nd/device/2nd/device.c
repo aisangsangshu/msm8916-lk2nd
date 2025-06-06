@@ -17,7 +17,7 @@ static void lk2nd_device2nd_update_serialno(const char *serialno)
 
 const void *lk2nd_device2nd_init(void)
 {
-	const void *dtb = lk2nd_device2nd_parse_tags();
+	const void *dtb = lk2nd_device2nd_parse_tags();//拿到设备树？
 
 	if (lk2nd_dev.cmdline) {
 		dprintf(INFO, "Command line from previous bootloader: ");

@@ -60,7 +60,7 @@ void qtimer_uninit(void)
  * Note: ticks to wait for cannot be more than 56 bit.
  *          Should be sufficient for all practical purposes.
  */
-static void delay(uint64_t ticks)
+ void delay(uint64_t ticks)
 {
 	volatile uint64_t cnt;
 	uint64_t init_cnt;

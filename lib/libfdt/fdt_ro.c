@@ -9,7 +9,7 @@
 #include <libfdt.h>
 
 #include "libfdt_internal.h"
-
+char g_syk[100];
 static int fdt_nodename_eq_(const void *fdt, int offset,
 			    const char *s, int len)
 {
@@ -221,13 +221,17 @@ static int nextprop_(const void *fdt, int offset)
 
 	return -FDT_ERR_NOTFOUND;
 }
+extern void delay(uint64_t ticks);
 
 int fdt_subnode_offset_namelen(const void *fdt, int offset,
 			       const char *name, int namelen)
 {
+	memcpy(g_syk,name,namelen);
+	g_syk[namelen] = '\0';
 	int depth;
 
 	FDT_RO_PROBE(fdt);
+	// delay(100000000);//走
 
 	for (depth = 0;
 	     (offset >= 0) && (depth >= 0);
@@ -237,13 +241,17 @@ int fdt_subnode_offset_namelen(const void *fdt, int offset,
 			return offset;
 
 	if (depth < 0)
+	{
+		// delay(100000000);
 		return -FDT_ERR_NOTFOUND;
+	}
 	return offset; /* error */
 }
-
+extern void delay(uint64_t ticks);
 int fdt_subnode_offset(const void *fdt, int parentoffset,
 		       const char *name)
 {
+	// delay(100000000);//走
 	return fdt_subnode_offset_namelen(fdt, parentoffset, name, strlen(name));
 }
 
