@@ -1,0 +1,22 @@
+// SPDX-License-Identifier: BSD-3-Clause
+
+#include <skeleton64.dtsi>
+#include <lk2nd.dtsi>
+
+/ {
+	qcom,msm-id = <0x116 0>;
+	qcom,board-id = <0x08 0>;
+};
+
+&lk2nd {
+	nx523j {
+		model = "Nubia Z11 Max (NX523J)";
+		compatible = "nubia,nx523j";
+		lk2nd,match-device = "NX523J*";
+
+		// 若有面板信息可补充，否则留空
+		// panel {
+		// 	compatible = "nubia,nx523j-panel", "lk2nd,panel";
+		// };
+	};
+}; 
