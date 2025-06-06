@@ -195,6 +195,7 @@ void display_fastboot_menu(void)
 	if (lk2nd_dev.model)
 		fbcon_puts_ln(SILVER, y, incr, true, lk2nd_dev.model);
 	else
+		//出现位置
 		fbcon_puts_ln(RED, y, incr, true, "Unknown (FIXME!)");
 	y += incr;
 

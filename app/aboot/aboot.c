@@ -3464,6 +3464,7 @@ void cmd_boot(const char *arg, void *data, unsigned sz)
 	fastboot_stop();
 
 	#ifdef LK2ND_FASTBOOT_DELAY
+	100
 	/* This can help with debugging on devices with carkit uart. You need to switch the cable before starting linux to see all the logs */
 	dprintf(INFO, "Waiting %ums before boot\n", LK2ND_FASTBOOT_DELAY);
 	thread_sleep(LK2ND_FASTBOOT_DELAY);
@@ -3478,6 +3479,7 @@ void cmd_boot(const char *arg, void *data, unsigned sz)
 	return;
 boot_failed:
 #if FBCON_DISPLAY_MSG
+2
 	/* revert to fastboot menu if boot failed */
 	display_fastboot_menu();
 #endif
@@ -5652,6 +5654,7 @@ normal_boot:
 	if (!boot_into_fastboot)
 	{
 #if WITH_LK2ND_BOOT
+//走
 		if (!boot_into_recovery)
 			lk2nd_boot();
 #endif
@@ -5740,6 +5743,7 @@ fastboot:
 		SUB_SALT_BUFF_OFFSET(target_get_max_flash_size()));
 #endif
 #if FBCON_DISPLAY_MSG || WITH_LK2ND_DEVICE_MENU
+//走
 	display_fastboot_menu();
 #endif
 }

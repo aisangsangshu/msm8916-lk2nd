@@ -93,7 +93,7 @@ static void device_init(const void *dtb, int device_node)
 	if (node < 0 && node != -FDT_ERR_NOTFOUND)
 		dprintf(CRITICAL, "Failed to check lk2nd device subnodes: %d\n", node);
 }
-
+//走的这个函数
 static void parse_dtb(const void *dtb)
 {
 	int node, len;
@@ -113,7 +113,7 @@ static void parse_dtb(const void *dtb)
 
 	val = fdt_getprop(dtb, node, "model", &len);
 	if (val && len > 0)
-		lk2nd_dev.model = strndup(val, len);
+		lk2nd_dev.model = strndup(val, len);//走的这里
 	else
 		dprintf(CRITICAL, "Failed to read 'model': %d\n", len);
 
