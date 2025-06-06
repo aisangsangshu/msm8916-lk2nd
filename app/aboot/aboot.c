@@ -1668,9 +1668,10 @@ int boot_linux_from_mmc(void)
 		dprintf(CRITICAL, "ERROR: Cannot read boot image header\n");
                 return -1;
 	}
+	#if 0
 	memcpy(g_syk, hdr->magic, BOOT_MAGIC_SIZE);//这里打印看到一个=
 	g_syk[BOOT_MAGIC_SIZE] = '\0';
-
+#endif
 	if (memcmp(hdr->magic, BOOT_MAGIC, BOOT_MAGIC_SIZE)) {
 		dprintf(CRITICAL, "ERROR: Invalid boot image header\n");
                 return ERR_INVALID_BOOT_MAGIC;

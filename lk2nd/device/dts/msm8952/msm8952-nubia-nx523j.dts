@@ -9,14 +9,16 @@
 };
 
 &lk2nd {
-	nx523j {
+
 		model = "Nubia Z11 Max (NX523J)";
 		compatible = "nubia,nx523j";
 		lk2nd,match-device = "NX523J*";
-
+		qcom,mdss_dsi_samsung_s6e3fa3x01_1080p_5p2_command{
+			compatible = "samsung,s6e3fa3x01-1080p-5p2";
+			};
 		// 若有面板信息可补充，否则留空
 		// panel {
 		// 	compatible = "nubia,nx523j-panel", "lk2nd,panel";
 		// };
-	};
+
 }; 

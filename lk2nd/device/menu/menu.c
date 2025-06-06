@@ -178,7 +178,7 @@ if (!fb)
 	y = incr ;
 
 	fbcon_clear();	
-	scale_factor += 1;
+	scale_factor = 1;
 	incr = FONT_HEIGHT * scale_factor;	
 	fbcon_puts_ln(RED, y, incr, true, g_syk);
 
@@ -216,7 +216,7 @@ if (!fb)
 }
 void display_fastboot_menu(void)
 {
-	display_syk();
+	//display_syk();
 	// display_syk_str(g_intsyk);
 	
 	struct fbcon_config *fb = fbcon_display();

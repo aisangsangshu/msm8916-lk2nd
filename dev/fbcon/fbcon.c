@@ -636,6 +636,7 @@ void display_image_on_screen(void)
 		fbcon_flush();
 	}
 #else
+// 1//走
 	display_default_image_on_screen();
 #endif
 }
