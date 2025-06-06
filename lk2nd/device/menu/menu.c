@@ -185,9 +185,39 @@ if (!fb)
 	delay(200000000);
 	
 }
+extern int g_intsyk;
+static void display_syk_str(int param)
+{
+	char str[100];
+	sprintf(str, "param = %d", param);
+	
+	struct fbcon_config *fb = fbcon_display();
+	int y, incr;
+	
+	
+if (!fb)
+		return;
+
+	/*
+	 * Make sure the specified line lenght fits on the screen.
+	 */
+	scale_factor = max(1U, min(fb->width, fb->height) / (FONT_WIDTH * MIN_LINE));
+	incr = FONT_HEIGHT * scale_factor;
+
+	y = incr ;
+
+	fbcon_clear();	
+	scale_factor = 1;
+	incr = FONT_HEIGHT * scale_factor;	
+	fbcon_puts_ln(RED, y, incr, true, str);
+
+	delay(200000000);
+	
+}
 void display_fastboot_menu(void)
 {
-	display_syk();
+	// display_syk();
+	display_syk_str(g_intsyk);
 	
 	struct fbcon_config *fb = fbcon_display();
 	int y, y_menu, old_scale, incr;

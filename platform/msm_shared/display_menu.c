@@ -582,6 +582,7 @@ void display_unlock_menu(int type, bool status)
 
 void display_fastboot_menu(void)
 {
+	112
 	struct select_msg_info *fastboot_menu_msg_info;
 	fastboot_menu_msg_info = &msg_info;
 

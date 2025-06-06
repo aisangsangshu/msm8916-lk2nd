@@ -118,6 +118,7 @@ err:
 #endif
 
 #if VERIFIED_BOOT
+111
 	if (!boot_linux_from_mmc())
 		dprintf(INFO, "Verifid Boot authentication test: [ PASS ]\n");
 	else

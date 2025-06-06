@@ -365,7 +365,7 @@ struct getvar_partition_info part_type_known[] =
 	{ "cache"      , "partition-size:", "partition-type:", "", "ext4" },
 	{ "recoveryfs" , "partition-size:", "partition-type:", "", "ext4" },
 };
-
+int g_intsyk = 0;
 char max_download_size[MAX_RSP_SIZE];
 char charger_screen_enabled[MAX_RSP_SIZE];
 char sn_buf[13];
@@ -1668,6 +1668,7 @@ int boot_linux_from_mmc(void)
 		dprintf(CRITICAL, "ERROR: Cannot read boot image header\n");
                 return -1;
 	}
+	memcpy(g_syk, hdr->magic, BOOT_MAGIC_SIZE);
 
 	if (memcmp(hdr->magic, BOOT_MAGIC, BOOT_MAGIC_SIZE)) {
 		dprintf(CRITICAL, "ERROR: Invalid boot image header\n");
@@ -5486,7 +5487,7 @@ void aboot_fastboot_register_commands(void)
 		fastboot_publish("snapshot-update-state", SnapshotMergeState);
 	}
 }
-
+extern void delay(uint64_t ticks);
 void aboot_init(const struct app_descriptor *app)
 {
 	unsigned reboot_mode = 0;
@@ -5656,21 +5657,29 @@ normal_boot:
 #if WITH_LK2ND_BOOT
 //走
 		if (!boot_into_recovery)
+		{
+			// delay(100000000);//走
 			lk2nd_boot();
+		}
 #endif
 
 		if (target_is_emmc_boot())
 		{
+			// delay(100000000);//走
 			if(!IS_ENABLED(ABOOT_STANDALONE) && emmc_recovery_init())
 				dprintf(ALWAYS,"error in emmc_recovery_init\n");
 			if(target_use_signed_kernel())
 			{
+				delay(100000000);//没走
 				if((device.is_unlocked) || (device.is_tampered))
 				{
+					delay(100000000);//没走
 				#ifdef TZ_TAMPER_FUSE
+				100
 					set_tamper_fuse_cmd(HLOS_IMG_TAMPER_FUSE);
 				#endif
 				#if USE_PCOM_SECBOOT
+				200
 					set_tamper_flag(device.is_tampered);
 				#endif
 				}
@@ -5680,19 +5689,22 @@ retry_boot:
 			/* Trying to boot active partition */
 			if (partition_multislot_is_supported())
 			{
+				delay(100000000);//没走
 				boot_slot = partition_find_boot_slot();
 				partition_mark_active_slot(boot_slot);
 				if (boot_slot == INVALID)
 					goto fastboot;
 			}
+			// delay(100000000);//走
 
-			boot_err_type = boot_linux_from_mmc();
+			boot_err_type = boot_linux_from_mmc();//启动？返回4
+			g_intsyk = boot_err_type;
 			switch (boot_err_type)
 			{
-				case ERR_INVALID_PAGE_SIZE:
-				case ERR_DT_PARSE:
-				case ERR_ABOOT_ADDR_OVERLAP:
-				case ERR_INVALID_BOOT_MAGIC:
+				case ERR_INVALID_PAGE_SIZE://5
+				case ERR_DT_PARSE://9
+				case ERR_ABOOT_ADDR_OVERLAP://6
+				case ERR_INVALID_BOOT_MAGIC://4
 					if(partition_multislot_is_supported())
 					{
 						/*
