@@ -181,6 +181,7 @@ if (!fb)
 	scale_factor = 1;
 	incr = FONT_HEIGHT * scale_factor;	
 	fbcon_puts_ln(RED, y, incr, true, g_syk);
+	fbcon_flush();
 
 	delay(200000000);
 	
@@ -210,13 +211,14 @@ if (!fb)
 	scale_factor = 1;
 	incr = FONT_HEIGHT * scale_factor;	
 	fbcon_puts_ln(RED, y, incr, true, str);
+	fbcon_flush();
 
 	delay(200000000);
 	
 }
 void display_fastboot_menu(void)
 {
-	//display_syk();
+	display_syk();
 	// display_syk_str(g_intsyk);
 	
 	struct fbcon_config *fb = fbcon_display();

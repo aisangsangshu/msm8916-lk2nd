@@ -226,6 +226,8 @@ extern void delay(uint64_t ticks);
 int fdt_subnode_offset_namelen(const void *fdt, int offset,
 			       const char *name, int namelen)
 {
+	//nx612j在这里拿到的是qcom,xxxx
+	//nx523j在这里拿到的是lk2nd，原因可能和设备树的结构不同
 	memcpy(g_syk,name,namelen);
 	g_syk[namelen] = '\0';
 	int depth;
