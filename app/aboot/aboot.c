@@ -137,6 +137,7 @@ struct fastboot_cmd_desc {
 #define DISPLAY_PANEL_HDMI "hdmi"
 
 #ifdef MEMBASE
+//走
 #define EMMC_BOOT_IMG_HEADER_ADDR (0xFF000+(MEMBASE))
 #else
 #define EMMC_BOOT_IMG_HEADER_ADDR 0xFF000
@@ -1653,12 +1654,12 @@ int boot_linux_from_mmc(void)
 		}
 	}
 
-	index = partition_get_index(ptn_name);
+	index = partition_get_index(ptn_name);//分区搜索？
 	ptn = partition_get_offset(index);
 	image_size = partition_get_size(index);
 	if(ptn == 0 || image_size == 0) {
 		dprintf(CRITICAL, "ERROR: No %s partition found\n", ptn_name);
-		return -1;
+		return -101;
 	}
 
 	/* Set Lun for boot & recovery partitions */
@@ -1666,9 +1667,9 @@ int boot_linux_from_mmc(void)
 
 	if (mmc_read(ptn + offset, (uint32_t *) buf, page_size)) {
 		dprintf(CRITICAL, "ERROR: Cannot read boot image header\n");
-                return -1;
+                return -102;
 	}
-	#if 0
+	#if 1
 	memcpy(g_syk, hdr->magic, BOOT_MAGIC_SIZE);//这里打印看到一个=
 	g_syk[BOOT_MAGIC_SIZE] = '\0';
 #endif
@@ -1681,7 +1682,7 @@ int boot_linux_from_mmc(void)
 
 		if (hdr->page_size > BOOT_IMG_MAX_PAGE_SIZE) {
 			dprintf(CRITICAL, "ERROR: Invalid page size\n");
-			return -1;
+			return -103;
 		}
 		page_size = hdr->page_size;
 		page_mask = page_size - 1;
@@ -1711,19 +1712,20 @@ int boot_linux_from_mmc(void)
 	dt_actual = ROUND_TO_PAGE(dt_size, page_mask);
 	if (UINT_MAX < ((uint64_t)kernel_actual + (uint64_t)ramdisk_actual+ (uint64_t)second_actual + (uint64_t)dt_actual + page_size)) {
 		dprintf(CRITICAL, "Integer overflow detected in bootimage header fields at %u in %s\n",__LINE__,__FILE__);
-		return -1;
+		return -104;
 	}
 	imagesize_actual = (page_size + kernel_actual + ramdisk_actual + second_actual + dt_actual);
 	dtb_image_size = hdr->kernel_size;
 #else
 	if (UINT_MAX < ((uint64_t)kernel_actual + (uint64_t)ramdisk_actual + (uint64_t)second_actual + page_size)) {
 		dprintf(CRITICAL, "Integer overflow detected in bootimage header fields at %u in %s\n",__LINE__,__FILE__);
-		return -1;
+		return -105;
 	}
 	imagesize_actual = (page_size + kernel_actual + ramdisk_actual + second_actual);
 #endif
 
 #ifdef OSVERSION_IN_BOOTIMAGE
+1
 	/* If header version is ONE and booting into recovery,
 		dtbo is appended with recovery image.
 		Doing following:
@@ -1810,7 +1812,7 @@ int boot_linux_from_mmc(void)
 	/* Validate the boot/recovery image size is within the bounds of partition size */
 	if (imagesize_actual > image_size) {
 		dprintf(CRITICAL, "Image size is greater than partition size.\n");
-		return -1;
+		return -106;
 	}
 
 #if VERIFIED_BOOT
@@ -1826,7 +1828,7 @@ int boot_linux_from_mmc(void)
 	if (check_aboot_addr_range_overlap((uintptr_t) image_addr, imagesize_actual))
 	{
 		dprintf(CRITICAL, "Boot image buffer address overlaps with aboot addresses.\n");
-		return -1;
+		return -107;
 	}
 
 	/*
@@ -1854,14 +1856,14 @@ int boot_linux_from_mmc(void)
 	if ((target_get_max_flash_size() - page_size) < imagesize_actual)
 	{
 		dprintf(CRITICAL, "booimage  size is greater than DDR can hold\n");
-		return -1;
+		return -108;
 	}
 	offset = page_size;
 	/* Read image without signature and header*/
 	if (mmc_read(ptn + offset, (void *)(image_addr + offset), imagesize_actual - page_size))
 	{
 		dprintf(CRITICAL, "ERROR: Cannot read boot image\n");
-		return -1;
+		return -109;
 	}
 
 	if (partition_multislot_is_supported())
@@ -1883,6 +1885,7 @@ int boot_linux_from_mmc(void)
 		device.is_unlocked,
 		device.is_tampered);
 #if VERIFIED_BOOT_2
+12
 	/* if device is unlocked skip reading signature, as full partition is read */
 	if (!device.is_unlocked)
 	{
@@ -1937,6 +1940,7 @@ int boot_linux_from_mmc(void)
 	info.bootreason_alarm = boot_reason_alarm;
 	info.bootinto_recovery = boot_into_recovery;
 	status = load_image_and_auth(&info);
+	11
 	if(status)
 		return -1;
 
@@ -1958,20 +1962,20 @@ int boot_linux_from_mmc(void)
 		if (check_aboot_addr_range_overlap((uintptr_t)image_addr + offset, page_size))
 		{
 			dprintf(CRITICAL, "Signature read buffer address overlaps with aboot addresses.\n");
-			return -1;
+			return -110;
 		}
 
 		/* Read signature */
 		if(mmc_read(ptn + offset, (void *)(image_addr + offset), page_size))
 		{
 			dprintf(CRITICAL, "ERROR: Cannot read boot image signature\n");
-			return -1;
+			return -111;
 		}
 
 		verify_signed_bootimg((uint32_t)image_addr, imagesize_actual);
 		/* The purpose of our test is done here */
 		if(is_test_mode_enabled() && auth_kernel_img)
-			return 0;
+			return 112;
 	} else {
 		second_actual  = ROUND_TO_PAGE(hdr->second_size,  page_mask);
 		#ifdef TZ_SAVE_KERNEL_HASH
@@ -1979,6 +1983,7 @@ int boot_linux_from_mmc(void)
 		#endif /* TZ_SAVE_KERNEL_HASH */
 
 #ifdef MDTP_SUPPORT
+3
 		{
 			/* Verify MDTP lock.
 			 * For boot & recovery partitions, MDTP will use boot_verifier APIs,
@@ -1998,6 +2003,7 @@ int boot_linux_from_mmc(void)
 #endif
 
 #if VERIFIED_BOOT
+1
 	if((boot_verify_get_state() == ORANGE) && (!boot_into_ffbm))
 	{
 #if FBCON_DISPLAY_MSG
@@ -2012,6 +2018,7 @@ int boot_linux_from_mmc(void)
 #endif
 
 #if VERIFIED_BOOT
+1
 	if (VB_M == target_get_vb_version())
 	{
 		/* set boot and system versions. */
@@ -2097,7 +2104,7 @@ int boot_linux_from_mmc(void)
 		check_ddr_addr_range_bound(hdr->ramdisk_addr, ramdisk_actual))
 	{
 		dprintf(CRITICAL, "kernel/ramdisk addresses are not valid.\n");
-		return -1;
+		return -113;
 	}
 
 #ifndef DEVICE_TREE
@@ -2106,7 +2113,7 @@ int boot_linux_from_mmc(void)
 		check_ddr_addr_range_bound(hdr->tags_addr, MAX_TAGS_SIZE))
 	{
 		dprintf(CRITICAL, "Tags addresses are not valid.\n");
-		return -1;
+		return -114;
 	}
 #endif
 
@@ -2117,31 +2124,31 @@ int boot_linux_from_mmc(void)
 
 		if (dev_tree_validate(table, hdr->page_size, &dt_hdr_size) != 0) {
 			dprintf(CRITICAL, "ERROR: Cannot validate Device Tree Table \n");
-			return -1;
+			return -115;
 		}
 
 		/* Its Error if, dt_hdr_size (table->num_entries * dt_entry size + Dev_Tree Header)
 		goes beyound hdr->dt_size*/
 		if (dt_hdr_size > ROUND_TO_PAGE(dt_size,hdr->page_size)) {
 			dprintf(CRITICAL, "ERROR: Invalid Device Tree size \n");
-			return -1;
+			return -116;
 		}
 
 		/* Find index of device tree within device tree table */
 		if(dev_tree_get_entry_info(table, &dt_entry) != 0){
 			dprintf(CRITICAL, "ERROR: Getting device tree address failed\n");
-			return -1;
+			return -117;
 		}
 
 		if(dt_entry.offset > (UINT_MAX - dt_entry.size)) {
 			dprintf(CRITICAL, "ERROR: Device tree contents are Invalid\n");
-			return -1;
+			return -118;
 		}
 
 		/* Ensure we are not overshooting dt_size with the dt_entry selected */
 		if ((dt_entry.offset + dt_entry.size) > dt_size) {
 			dprintf(CRITICAL, "ERROR: Device tree contents are Invalid\n");
-			return -1;
+			return -119;
 		}
 
 		if (is_gzip_package((unsigned char *)dt_table_offset + dt_entry.offset, dt_entry.size))
@@ -2171,7 +2178,7 @@ int boot_linux_from_mmc(void)
 			check_ddr_addr_range_bound(hdr->tags_addr, dtb_size))
 		{
 			dprintf(CRITICAL, "Device tree addresses are not valid\n");
-			return -1;
+			return -120;
 		}
 
 		memmove((void *)hdr->tags_addr, (char *)best_match_dt_addr, dtb_size);
@@ -2181,7 +2188,7 @@ int boot_linux_from_mmc(void)
 			check_ddr_addr_range_bound(hdr->tags_addr, kernel_actual))
 		{
 			dprintf(CRITICAL, "Device tree addresses are not valid.\n");
-			return -1;
+			return -121;
 		}
 		/*
 		 * If appended dev tree is found, update the atags with
@@ -2195,6 +2202,7 @@ int boot_linux_from_mmc(void)
 		image_buf = (void*)(image_addr + page_size + patched_kernel_hdr_size);
 
 #ifdef OSVERSION_IN_BOOTIMAGE
+//不走
 		if ( hdr->header_version == BOOT_HEADER_VERSION_TWO) {
 
 			image_buf = (void*)(image_addr);
@@ -2204,15 +2212,17 @@ int boot_linux_from_mmc(void)
 #endif
 
 		dtb = dev_tree_appended(image_buf, dtb_image_size, dtb_offset,
-				(void *)hdr->tags_addr);
+				(void *)hdr->tags_addr);//实际上的原因，dtb为空
 		if (!dtb) {
 			dprintf(CRITICAL, "ERROR: Appended Device Tree Blob not found\n");
 #if WITH_LK2ND_DEVICE_2ND
-			if (lk2nd_device2nd_have_atags())
+//走
+
+			if (lk2nd_device2nd_have_atags())//这里出现问题？
 				boot_type |= BOOT_ATAGS_COPY;
 			else
 #endif
-			return -1;
+			return -122;//返回-122
 		}
 	}
 	#endif
@@ -2231,7 +2241,7 @@ unified_boot:
 		   (void *)hdr->ramdisk_addr, hdr->ramdisk_size,
 		   boot_type);
 
-	return 0;
+	return 113;
 }
 
 int boot_linux_from_flash(void)

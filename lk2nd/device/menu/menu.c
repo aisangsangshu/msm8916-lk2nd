@@ -219,7 +219,7 @@ if (!fb)
 void display_fastboot_menu(void)
 {
 	display_syk();
-	// display_syk_str(g_intsyk);
+	display_syk_str(g_intsyk);
 	
 	struct fbcon_config *fb = fbcon_display();
 	int y, y_menu, old_scale, incr;

@@ -89,6 +89,7 @@ static void lk2nd_partition_split_mmc(void)
 	uint32_t block_size __UNUSED = mmc_get_device_blocksize();
 
 #ifdef LK2ND_PARTITION_SIZE
+//走
 	partition_split_mmc(LK2ND_PARTITION_BASE, LK2ND_PARTITION_NAME,
 			    LK2ND_PARTITION_SIZE / block_size, false);
 #endif

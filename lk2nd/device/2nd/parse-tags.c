@@ -131,8 +131,9 @@ static bool parse_atags(const void *tags)
 	dprintf(INFO, "Found valid ATAGS with %u bytes total (copy: %u bytes)\n",
 		total_size, copy_size);
 
-	if (copy_size) {
-		atags_copy = copy = malloc(copy_size);
+	if (copy_size) {//确实没有进来
+		//  delay(200000000);
+		atags_copy = copy = malloc(copy_size);//这里没有给他初始化？
 		atags_copy_size = copy_size;
 	}
 

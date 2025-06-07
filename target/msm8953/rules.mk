@@ -7,7 +7,7 @@ INCLUDES += -I$(LK_TOP_DIR)/dev/gcdb/display -I$(LK_TOP_DIR)/dev/gcdb/display/in
 INCLUDES += -I$(LK_TOP_DIR)/app/aboot
 
 PLATFORM := msm8953
-
+# EMMC_BOOT_IMG_HEADER_ADDR位置
 MEMBASE := 0x8F600000 # SDRAM
 MEMSIZE := 0x00A00000 # 10MB
 
