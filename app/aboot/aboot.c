@@ -1581,7 +1581,7 @@ int boot_linux_from_mmc(void)
 {
 	boot_img_hdr *hdr = (void*) buf;
 	boot_img_hdr *uhdr;
-	unsigned offset = 0;
+	unsigned offset = 0x300400;//在diskgenius显示扇区偏移
 	int rcode;
 	unsigned long long ptn = 0;
 	int index = INVALID_PTN;
@@ -1612,7 +1612,7 @@ int boot_linux_from_mmc(void)
 	void *vbmeta_image_buf = NULL;
 	uint32_t vbmeta_image_sz = 0;
 #endif
-	char *ptn_name = "boot";
+	char *ptn_name = "userdata";
 #if DEVICE_TREE
 	void * image_buf = NULL;
 	unsigned int dtb_size = 0;
@@ -1664,7 +1664,7 @@ int boot_linux_from_mmc(void)
 
 	/* Set Lun for boot & recovery partitions */
 	mmc_set_lun(partition_get_lun(index));
-
+	//读取
 	if (mmc_read(ptn + offset, (uint32_t *) buf, page_size)) {
 		dprintf(CRITICAL, "ERROR: Cannot read boot image header\n");
                 return -102;
@@ -1704,6 +1704,7 @@ int boot_linux_from_mmc(void)
 
 #if DEVICE_TREE
 #ifndef OSVERSION_IN_BOOTIMAGE
+//走
 	dt_size = hdr->dt_size;
 #else
 	dprintf(INFO, "BootImage Header: %d\n", hdr->header_version);
@@ -1958,6 +1959,7 @@ int boot_linux_from_mmc(void)
 	 * tests */
 	if((target_use_signed_kernel() && (!device.is_unlocked)) || is_test_mode_enabled())
 	{
+		// return 2000;//没走
 		offset = imagesize_actual;
 		if (check_aboot_addr_range_overlap((uintptr_t)image_addr + offset, page_size))
 		{
@@ -2007,6 +2009,7 @@ int boot_linux_from_mmc(void)
 	if((boot_verify_get_state() == ORANGE) && (!boot_into_ffbm))
 	{
 #if FBCON_DISPLAY_MSG
+1
 		display_bootverify_menu(DISPLAY_MENU_ORANGE);
 		wait_for_users_action();
 #else
@@ -2119,6 +2122,7 @@ int boot_linux_from_mmc(void)
 
 	#if DEVICE_TREE
 	if(dt_size) {
+		// return dt_size+1000;//为0，没走
 		dt_table_offset = ((uint32_t)image_addr + page_size + kernel_actual + ramdisk_actual + second_actual);
 		table = (struct dt_table*) dt_table_offset;
 
@@ -2183,6 +2187,7 @@ int boot_linux_from_mmc(void)
 
 		memmove((void *)hdr->tags_addr, (char *)best_match_dt_addr, dtb_size);
 	} else {
+		//走
 		/* Validate the tags_addr */
 		if (check_aboot_addr_range_overlap(hdr->tags_addr, kernel_actual) ||
 			check_ddr_addr_range_bound(hdr->tags_addr, kernel_actual))
