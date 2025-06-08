@@ -1581,7 +1581,7 @@ int boot_linux_from_mmc(void)
 {
 	boot_img_hdr *hdr = (void*) buf;
 	boot_img_hdr *uhdr;
-	unsigned offset = 0x300400;//在diskgenius显示扇区偏移
+	unsigned offset = 0;//在diskgenius显示扇区偏移
 	int rcode;
 	unsigned long long ptn = 0;
 	int index = INVALID_PTN;
@@ -1612,7 +1612,7 @@ int boot_linux_from_mmc(void)
 	void *vbmeta_image_buf = NULL;
 	uint32_t vbmeta_image_sz = 0;
 #endif
-	char *ptn_name = "userdata";
+	char *ptn_name = "boot";
 #if DEVICE_TREE
 	void * image_buf = NULL;
 	unsigned int dtb_size = 0;

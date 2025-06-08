@@ -7,11 +7,11 @@
 
 / {
 	qcom,msm-id = <QCOM_ID_MSM8953 0>;
-	qcom,board-id = <999 0>;
+	qcom,board-id = <999 0>;//记得是0x08 0
 };
 
 &lk2nd {
-	ysl {
+
 		model = "Xiaomi Redmi S2/Y2 (ysl)";
 		compatible = "xiaomi,ysl";
 		lk2nd,match-panel;
@@ -30,6 +30,9 @@
 			qcom,mdss_dsi_truly_hd720_video {
 				compatible = "xiaomi,ysl-hx8394f";
 			};
+			qcom,mdss_dsi_jdi_td4310_1080_2160_5p99_video {
+				compatible = "jdi,td4310-1080-2160-5p99";
+			};			
 		};
-	};	
+
 };
